@@ -33,8 +33,7 @@ const getByteLength = require('./encoding_utils.js').getByteLength;
  *-----------------------------------------------------------------------------*/
 
 function StringSerializer(value, buffer, bufferOffset) {
-  // let len = getByteLength(value);
-  let len = value.byteLength;
+  let len = getByteLength(value);
   bufferOffset = buffer.writeUInt32LE(len, bufferOffset);
   return bufferOffset + buffer.write(value, bufferOffset, len, 'utf8');
 }

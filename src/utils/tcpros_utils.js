@@ -17,6 +17,7 @@
 
 'use strict';
 
+const getByteLength = require('../ros_msg_utils/lib/encoding_utils.js').getByteLength;
 const ros_msg_utils = require('../ros_msg_utils');
 const base_serializers = ros_msg_utils.Serialize;
 const base_deserializers = ros_msg_utils.Deserialize;
@@ -39,7 +40,7 @@ const tcpNoDelayField = 'tcp_nodelay=1';
 function serializeStringFields(fields) {
   let length = 0;
   fields.forEach((field) => {
-    length += (field.length + 4);
+    length += (getByteLength(field) + 4);
   });
   let buffer = new Buffer(4 + length);
   let offset = base_serializers.uint32(length, buffer, 0);
