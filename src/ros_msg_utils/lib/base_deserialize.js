@@ -32,11 +32,18 @@ const BN = require('bn.js');
  * DeserializeFunc(buffer, bufferOffset)
  *-----------------------------------------------------------------------------*/
 
-function StringDeserializer(buffer, bufferOffset) {
+function _StringDeserializer(buffer, bufferOffset) {
   const len = UInt32Deserializer(buffer, bufferOffset);
   const str = buffer.slice(bufferOffset[0], bufferOffset[0] + len).toString('utf8');
   bufferOffset[0] += len;
   return str;
+}
+
+function StringDeserializer(buffer, bufferOffset) {
+  const len = UInt32Deserializer(buffer, bufferOffset);
+  const codePoints = new Uint8Array(buffer.buffer, buffer.byteOffset + bufferOffset[0], len);
+  bufferOffset[0] += len;
+  return codePoints
 }
 
 function UInt8Deserializer(buffer, bufferOffset) {
@@ -178,6 +185,7 @@ function UInt8ArrayDeserializer(buffer, bufferOffset, arrayLen=null) {
 
 const PrimitiveDeserializers = {
   string: StringDeserializer,
+  _string: _StringDeserializer,
   float32: Float32Deserializer,
   float64: Float64Deserializer,
   bool: BoolDeserializer,
@@ -197,6 +205,7 @@ const PrimitiveDeserializers = {
 
 const ArrayDeserializers = {
   string: DefaultArrayDeserializer.bind(null, StringDeserializer),
+  _string: DefaultArrayDeserializer.bind(null, _StringDeserializer),
   float32: DefaultArrayDeserializer.bind(null, Float32Deserializer),
   float64: DefaultArrayDeserializer.bind(null, Float64Deserializer),
   bool: DefaultArrayDeserializer.bind(null, BoolDeserializer),

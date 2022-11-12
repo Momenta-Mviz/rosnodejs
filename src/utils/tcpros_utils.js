@@ -55,7 +55,7 @@ function deserializeStringFields(buffer) {
   const fields = [];
   const offset = [0];
   while (offset[0] < buffer.length) {
-    const str = base_deserializers.string(buffer, offset);
+    const str = base_deserializers._string(buffer, offset);
     fields.push(str);
   }
 
